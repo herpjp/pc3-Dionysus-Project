@@ -1,0 +1,90 @@
+#include <stdio.h>
+
+// Print the current state of the board
+void print_board(char board[3][3]) {
+    printf("\n");
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            printf(" %c ", board[i][j]);
+            if(j < 2) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if(i < 2) {
+            printf("---|---|---\n");
+        }
+    }
+    printf("\n");
+}
+
+// Check if a player has won
+char check_win(char board[3][3]) {
+    for(int i = 0; i < 3; i++) {
+        if(board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+            return board[i][0];
+        }
+        if(board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
+            return board[0][i];
+        }
+    }
+    if(board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        return board[0][0];
+    }
+    if(board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+        return board[0][2];
+    }
+    return ' ';
+}
+
+int main() {
+    char board[3][3] = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+    char player = 'X';
+    int row, col;
+    int moves = 0;
+    
+    printf("Welcome to Tic Tac Toe!\n");
+    printf("Player 1: X\nPlayer 2: O\n");
+    printf("The board is:\n");
+    print_board(board);
+    
+    while(moves < 9) {
+        printf("Player %c, enter row (1-3): ", player);
+        scanf("%d", &row);
+        printf("Player %c, enter column (1-3): ", player);
+        scanf("%d", &col);
+        
+        // Check if move is valid
+        if(row < 1 || row > 3 || col < 1 || col > 3) {
+            printf("Invalid move! Please enter row and column between 1-3.\n");
+            continue;
+        }
+        if(board[row-1][col-1] != ' ') {
+            printf("Invalid move! Cell already taken. Please try again.\n");
+            continue;
+        }
+        
+        // Make the move
+        board[row-1][col-1] = player;
+        moves++;
+        print_board(board);
+        
+        // Check for win
+        char winner = check_win(board);
+        if(winner != ' ') {
+            printf("Player %c wins!\n", winner);
+            return 0;
+        }
+        
+        // Switch player
+        if(player == 'X') {
+            player = 'O';
+        } else {
+            player = 'X';
+        }
+    }
+    
+    // Game is a draw
+    printf("It's a draw!\n");
+    return 0;
+}
